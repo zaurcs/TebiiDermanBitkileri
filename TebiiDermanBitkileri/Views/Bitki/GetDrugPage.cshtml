@@ -1,0 +1,99 @@
+﻿@model TebiiDermanBitkileri.Models.EntityViewModel
+
+@{
+    ViewData["Title"] = "GetDrugPage";
+}
+<html>
+    <head>
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    </head>
+    <body>
+
+        <h1>GetDrugPage</h1>
+        <p>
+            <a asp-action="Create">Create New</a>
+        </p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Şəkil</th>
+                    <th>Ad</th>
+                    <th>Bitki növü</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+        @foreach (var item in Model.Bitkiler) {
+                <tr class="clickable-row" data-toggle="modal" data-target="detailsModal" style="cursor:pointer" data="@item.Id">
+                    <td>@Html.DisplayFor(modelItem => item.Sekil)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Ad)</td>
+                    <td>@Html.DisplayFor(modelItem => item.BitkiNovuId)</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+        }
+            </tbody>
+        </table>
+
+    <div class="modal fade bd-example-modal-lg" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="container rounded bg-white mt-5 mb-5">
+                        <div class="row">
+                            <div>
+                                <div class="p-3 py-5">
+                                    <div class="row mt-2" id="modalContent">
+                                        <script type="text/javascript">
+                                            $(() => {
+                                                $(".clickable-row").click(function() {
+                                                    let data = $(this).attr('data');
+                                                    let code = "";
+                                                    var items = @Html.Raw(Json.Serialize(Model.Bitkiler));
+                                                    var items2 = @Html.Raw(Json.Serialize(Model.BitkiNovleri))
+
+                                                    console.log(data);
+                                                    console.log(items);
+                                                    for(var i = 0; i < items.$values.length; i++){
+                                                        if(i + 1 == data){
+                                                            code += `
+                                                                        <div class="row">
+                                                                            <div class="col-md-8">
+                                                                                <div class="col-md-12">
+                                                                                <img class="rounded-circle" style="float:right" width="250px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg" />
+                                                                                <br />
+                                                                            </div>
+                                                                            <div class="col-md-4"></div>
+                                                                        </div>
+                                                                        <div class="col-md-6"><label class="labels h5">Adı: </label>
+                                                                            <br /><label class="text-muted">${items.$values[i].ad}</label>
+                                                                        </div>
+                                                                        <div class="col-md-6"><label class="labels h5">Növü</label>
+                                                                            <br /><label class="text-muted"></label>    
+                                                                        </div>
+                                                                        <div class="col-md-6"><label class="labels h5">Vitaminlər: </label>
+                                                                            <br /><label class="text-muted"></label>    
+                                                                        </div>
+                                                                        <div class="col-md-6"><label class="labels h5">Hansı xəstəlikərə çarədir: </label>
+                                                                            <br /><label class="text-muted"></label>    
+                                                                        </div>
+                                                                        `
+                                                            $("#modalContent").html(code);
+                                                        }
+                                                    }
+                                                    $('#detailsModal').modal('show');
+                                                });
+                                            });
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+         </div>
+    </body>
+</html>
